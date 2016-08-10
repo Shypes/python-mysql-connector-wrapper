@@ -5,8 +5,8 @@ Wrapper Class to help you build mysql queries for the offical python mysql conne
 ===========================================
 ## Initise Class
 
-    import Sql  
-    sql = Sql()
+    import Sql
+    sql = Sql(database='my_database',user='root',password='***',host='localhost')
     
 ## insert Method
     sql.insert("my_table",{'username':'John','email':'example@gmail.com'})

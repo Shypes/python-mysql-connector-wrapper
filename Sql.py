@@ -11,14 +11,13 @@ from mysql.connector import errorcode
 class Sql:
 
     __mysql = ""
-
     #configuration Parameters
-
-    Host = None
-    User = None
-    Password = None
-    host = None
-
+    config = {
+        'host':'localhost',
+        'user':'root',
+        'password':'',
+        'database':'',
+    }
 
     Prefix = 'wp_'
     QueryResult = {}
@@ -26,22 +25,17 @@ class Sql:
     rowcount = 0
     field='*'
 
-    def __init__(self, host = None, user = None, password = None, database = None, connect = False):
-        if None != host :
-            self.Host = host
-        if None != user :
-            self.User = user
-        if None != password :
-            self.Password = password
-        if None != database :
-            self.Database = database
+    def __init__(self,connect = False, **kwargs):
+        for key in kwargs:
+            if key in self.config :
+                self.config[key] = kwargs[key]
         if connect:
-            self.connect(self)
+            self.connect()
 
     def connect(self):
         if self.__mysql is None:
             try:
-                cnx = mysql.connector.connect(user=self.User, password=self.Password, host=self.Host, database=self.Database)
+                cnx = mysql.connector.connect(user=self.config['user'], password=self.config['password'], host=self.config['host'], database=self.config['database'])
                 self.__mysql = cnx
             except mysql.connector.Error as err:
                 if err.errno == errorcode.ER_ACCESS_DENIED_ERROR:
@@ -232,7 +226,7 @@ class Sql:
            param = condition
         return {"where":where,'param':param}
 
-    def _field(self,required = []):
+    def _field(self,required= []):
         if len(required) > 0 :
             fields = ""
             i = 0
