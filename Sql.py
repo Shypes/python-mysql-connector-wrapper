@@ -135,7 +135,7 @@ class Sql:
         self.query(query,param,0,debug)
         return self.rowcount
 
-    def delete(self,table,condition='',prepare={},debug = False) :
+    def delete(self,table,condition={},prepare={},debug = False) :
         table = self._fixtable(table)
         param = {}
         if isinstance(condition, str) == True :
@@ -182,14 +182,17 @@ class Sql:
             return "NULL"
         else  :
             if(type == "Number") :
-                return float(value)
-            else:
-                if(encode == True) :
-                    value = self._htmlspecialchars(value)
-                if(quote == False):
-                    return value
-                else :
-                    return "'" +value+ "'"
+                try:
+                    return float(value)
+                except Exception:
+                    pass
+
+            if(encode == True) :
+                value = self._htmlspecialchars(value)
+            if(quote == False):
+                return value
+            else :
+                return "'" +value+ "'"
 
     def _fixtable(self,table_param):
         table_param = str(table_param)
